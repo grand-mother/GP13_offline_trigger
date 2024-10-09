@@ -77,8 +77,8 @@ def grand_T3_trigger(arr_time_sorted, du_id, width, nDU):
 
 
 if __name__ == "__main__":
-  timewindow_ns = 5e3 # the coincidence timewindow, [ns]
-  nDU = 3
+  timewindow_ns = 9e3 # the coincidence timewindow, [ns]
+  nDU = 4
 
   # fname = "data/GP13_UD/GP13_20240613_164741_RUN127_UD_RAW_ChanXYZ_20dB_11DUs_001.root"
   fpath = sys.argv[1]
@@ -147,6 +147,7 @@ if __name__ == "__main__":
   list_time0 = list_sec0.astype(np.float64) + list_nanosec0.astype(np.float64) / 1e9
   list_time0_sorted = np.sort(list_time0)
   mask_time0_sort = np.argsort(list_time0)
+  list_du_seconds_sorted = list_du_seconds[mask_time0_sort]
   list_du_id_sorted = list_du_id[mask_time0_sort]
   list_trigger_time = grand_T3_trigger(list_time0_sorted, list_du_id_sorted,
                                       timewindow_ns / 1e9, nDU)
@@ -175,7 +176,7 @@ if __name__ == "__main__":
             # Use the first triggered DU as the time origin
             f.write(f"{n_UD} {i_event} {list_time0_sorted[mask_time_conincidence][i]:.9f} {amp_peak}\n") # LineNumber, EventID, TriggerTime, PeakAmplitude
             # Coordinates in meter
-            date = datetime.datetime.utcfromtimestamp(list_time0_sorted[mask_time_conincidence][i])
+            date = datetime.datetime.utcfromtimestamp(list_du_seconds_sorted[mask_time_conincidence][i])
             gcs = get_DU_coord(list_lat[mask_time0_sort][mask_time_conincidence][i],
                               list_lon[mask_time0_sort][mask_time_conincidence][i],
                               list_alt[mask_time0_sort][mask_time_conincidence][i],
